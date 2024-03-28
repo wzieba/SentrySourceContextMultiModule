@@ -1,0 +1,17 @@
+name: Build
+
+on: [ push ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Build with Gradle
+        run: SENTRY_AUTH_TOKEN=${{secrets.SENTRY_AUTH_TOKEN}} ./gradlew assembleRelease
+      - run: cd x/build/intermediates/sentry/release/source-bundle && unzip \*.zip && tree .
